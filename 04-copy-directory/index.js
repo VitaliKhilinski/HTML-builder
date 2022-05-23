@@ -17,15 +17,22 @@ function copyDir() {
       return console.log("Unable to scan directory: " + err);
     }
     files.forEach((file) => {
-      fs.copyFile(
-        path.join(sourcePath, file),
-        path.join(sourceCopyPath, file),
-        (error) => {
-          if (error) {
-            return console.log(error);
-          }
+      fs.stat(path.join(sourcePath, file), (err, stats) => {
+        if (err) {
+          console.log(err + "path");
         }
-      );
+        if (stats.isFile()) {
+          fs.copyFile(
+            path.join(sourcePath, file),
+            path.join(sourceCopyPath, file),
+            (error) => {
+              if (error) {
+                return console.log(error);
+              }
+            }
+          );
+        }
+      });
     });
     console.log("all files have been copyed to files-copy direction");
   });
